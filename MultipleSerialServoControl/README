@@ -1,0 +1,5 @@
+http://principialabs.com/arduino-python-4-axis-servo-control/
+
+# Install python pyserial and pygame modules
+sudo easy_install -U pyserial
+sudo easy_install -U pygame
