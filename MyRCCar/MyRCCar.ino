@@ -43,12 +43,6 @@ void arm()  //intializes the ESC
 {
   Serial.println("Arming ESC...");
   servo_moteur.write(servo_moteur_stop);
-  delay(2000);
-  servo_moteur.write(80);
-  delay(2000);
-  servo_moteur.write(120);
-  delay(1000);
-  servo_moteur.write(servo_moteur_stop);
   delay(1000);
 }
 
