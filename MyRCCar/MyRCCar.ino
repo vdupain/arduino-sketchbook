@@ -9,8 +9,8 @@ int servo_moteur_stop = 89;  // set the Neutral position for Engine Servo  - cha
 
 int servo_direction_droite = servo_direction_stop + 40;
 int servo_direction_gauche = servo_direction_stop - 40;
-int servo_moteur_avance = servo_moteur_stop + 8;
-int servo_moteur_recule = servo_moteur_stop - 8;
+int servo_moteur_avance = servo_moteur_stop + 10;
+int servo_moteur_recule = servo_moteur_stop - 10;
 
 // integers to use for updating Servo motors
 // change these values to change the various motor actions
