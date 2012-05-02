@@ -40,8 +40,8 @@ void setup()
   trajectoire.attach(11);  // servo sur le pin 11
   
   // interruption par le bumper (choc détecté quand l'interrupt 0 sur le pin 2 passe de LOW à HIGH)  
-  pinMode(2, INPUT);
-  digitalWrite(2, HIGH); // enable pull-up resistor
+  //pinMode(2, INPUT);
+  //digitalWrite(2, HIGH); // enable pull-up resistor
   attachInterrupt(0, obstacle, RISING); 
   // interrupts();
   
@@ -58,13 +58,13 @@ void loop()
  for(angle_servo = (centre-balayage); angle_servo < (centre+balayage); angle_servo++)  // balayage servo autour du point central par incréments d'1 degré
   {                                  
     myservo.write(angle_servo);  // met le servo sur la position en cours
-    delay(tempo);        // temps d'attente pour que le servo atteigne sa position
+    //delay(tempo);        // temps d'attente pour que le servo atteigne sa position
     conduit(angle_servo);        // on roule - on transmet la position du servo
   } 
  for(angle_servo = (centre+balayage); angle_servo >= (centre-balayage); angle_servo--)  // idem avec balayage dans l'autre sens
   {                                
     myservo.write(angle_servo);              
-    delay(tempo);                       
+    //delay(tempo);                       
     conduit(angle_servo);
   }  
 } 
