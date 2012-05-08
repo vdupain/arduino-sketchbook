@@ -1,3 +1,6 @@
+#include <Max3421e.h>
+#include <Usb.h>
+#include <AndroidAccessory.h>
 #include <Servo.h> // bibliotheque servo
 
 // variable de l'interruption du bumper
@@ -31,9 +34,18 @@ const int centre_turn = 800; // temps de rotation quand capteur central
 int temps = 0; // temps de rotation d'une chenille quand on tourne du fait d'un télémètre
 int vitesseEncours = vitesseAfond; // stocke la vitesse en cours
 
+// pour la communication avec le téléphone
+AndroidAccessory acc("Google, Inc.",
+         "DemoKit",
+         "DemoKit Arduino Board",
+         "1.0",
+         "http://www.android.com",
+         "0000000012345678");
+
 void setup() 
 { 
   Serial.begin(115200);
+  //Serial.print("\r\nStart");
   // servo
   myservo.attach(9);  // servo sur le pin 9
   moteur.attach(10);  // servo sur le pin 10
@@ -48,23 +60,25 @@ void setup()
   // initialisation de l'ESC  
   moteur.write(vitesseArret);
   delay(1000);
+
+  acc.powerOn();
+  delay(1000);
 } 
  
-void loop() 
-{   
+void loop() { 
  if (choc == 1) { // si un choc a été détecté
    bump();
  }  
  for(angle_servo = (centre-balayage); angle_servo < (centre+balayage); angle_servo++)  // balayage servo autour du point central par incréments d'1 degré
   {                                  
     myservo.write(angle_servo);  // met le servo sur la position en cours
-    //delay(tempo);        // temps d'attente pour que le servo atteigne sa position
+    delay(tempo);        // temps d'attente pour que le servo atteigne sa position
     conduit(angle_servo);        // on roule - on transmet la position du servo
   } 
  for(angle_servo = (centre+balayage); angle_servo >= (centre-balayage); angle_servo--)  // idem avec balayage dans l'autre sens
   {                                
     myservo.write(angle_servo);              
-    //delay(tempo);                       
+    delay(tempo);                       
     conduit(angle_servo);
   }  
 } 
@@ -74,13 +88,25 @@ void loop()
 /* prend les décisions adéquates en fonction */
 /* de la position du servo*/
   
-void conduit(int pos_servo) { 
+void conduit(int pos_servo) {
+  byte msg[3];
   // mesure de distance sur les 3 capteurs  
   int distanceGauche = calculDistance(IRpinG); 
   int distanceCentre = calculDistance(IRpinC);
   int distanceDroite = calculDistance(IRpinD);
   
-  Serial.println((String)distanceCentre + ":" + (String)pos_servo);
+  Serial.print(pos_servo);
+  Serial.print(":");
+  Serial.print(distanceCentre);
+  Serial.println();
+
+  if (acc.isConnected()) {
+    Serial.print("Accessory connected. ");
+    msg[0] = 0x6;
+    msg[1] = distanceCentre;
+    msg[2] = pos_servo;
+    acc.write(msg, 3);
+  }  
   
   // si rien en vue, on met les gaz  
   if (distanceGauche == 150 && distanceDroite == 150 && distanceCentre == 150 && vitesseEncours != vitesseAfond) {
