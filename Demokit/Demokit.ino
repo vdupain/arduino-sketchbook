@@ -69,12 +69,6 @@ void loop() {
 		char c0;
 
 		if (len > 0) {
-                  Serial.print(msg[0]);
-                  Serial.print(" - ");
-                  Serial.print(msg[1]);
-                  Serial.print(" - ");
-                  Serial.println(msg[2]);
-
 			// assumes only one command per packet
 			if (msg[0] == 0x2) {
 				if (msg[1] == 0x0)
