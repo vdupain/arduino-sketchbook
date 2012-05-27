@@ -35,9 +35,9 @@ int temps = 0; // temps de rotation d'une chenille quand on tourne du fait d'un 
 int vitesseEncours = vitesseAfond; // stocke la vitesse en cours
 
 // pour la communication avec le téléphone
-AndroidAccessory acc("Google, Inc.",
-         "DemoKit",
-         "DemoKit Arduino Board",
+AndroidAccessory acc("Vince",
+         "ArduinoADK",
+         "ArduinoADK",
          "1.0",
          "http://www.android.com",
          "0000000012345678");
@@ -100,11 +100,16 @@ void conduit(int pos_servo) {
   Serial.print(distanceCentre);
   Serial.println();
 
+  // test
+  if (pos_servo >=30 && pos_servo <= 45) {
+    distanceCentre = 40;
+  }
+    
   if (acc.isConnected()) {
     Serial.print("Accessory connected. ");
     msg[0] = 0x6;
-    msg[1] = distanceCentre;
-    msg[2] = pos_servo;
+    msg[1] = pos_servo;
+    msg[2] = distanceCentre;
     acc.write(msg, 3);
   }  
   
@@ -203,9 +208,11 @@ int calculDistance(int telemetre) {
    distance = distance + 65*pow(volts, -1.10);
   }
   distance = distance/nombre_mesure;
+  
   if (distance > 150 or distance < 20) { // si hors limites on met à 150
     distance = 150;
   }
+  
   return(distance);
 }
 
