@@ -14,7 +14,6 @@ AndroidAccessory acc("Vince",
 "0000000012345678");
 
 Servo servo1, servo2;
-boolean handshakeOk = false;
 
 void setup() {
   Serial.begin(115200);
@@ -35,35 +34,6 @@ void loop() {
   byte msg[3];
 
   if (acc.isConnected()) {
-    if (!handshakeOk) {
-      // Do handshake.
-      msg[0] = 'X';
-      msg[1] = 'X';
-      msg[2] = 0x01;
-      acc.write(msg, sizeof(msg));
-      // Wait for response.
-      unsigned long timeout = millis() + 2000;
-      boolean timedOut = true;
-      int len;
-      while (millis () < timeout) {
-        len = acc.read(msg, sizeof(msg), 1);
-        if (len > 0) {
-          timedOut = false;
-          break;
-        }
-      }
-
-      if (timedOut 
-        || (len < 3) 
-        || !((msg[0] == 'X') && (msg[1] == 'X') && (msg[2] == 0x01))) {
-        // No response, short response or bad response received so we
-        // assume it's an "old" version.
-        // TODO: Print error message to Serial for debugging?
-        // Serial.println("Version mismatch.");
-        return;
-      }
-      handshakeOk = true;
-    }
     int len = acc.read(msg, sizeof(msg), 1);
     if (len > 0) {
       // assumes only one command per packet
