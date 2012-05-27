@@ -39,24 +39,25 @@ void loop() {
       // assumes only one command per packet
       if (msg[0] == 0x2) {
         if (msg[1] == 0x1) {
-          servo1.write(map(msg[2], 0, 255, 0, 180));
+          servo1.write(constrain(msg[2], 0, 180));
         } 
         else if (msg[1] == 0x2) {
-          servo2.write(map(msg[2], 0, 255, 0, 180));
+          servo2.write(constrain(msg[2], 0, 180));
         }
-      } else if (msg[0] == 0x3) {
-          servo1.write(map(msg[1], 0, 255, 0, 180));
-          servo2.write(map(msg[2], 0, 255, 0, 180));
+      } 
+      else if (msg[0] == 0x3) {
+        servo1.write(constrain(msg[1], 0, 180));
+        servo2.write(constrain(msg[2], 0, 180));
       }
     }
     msg[0] = 0x1;
     switch (count++ % 0x10) {
-      case 0:
-	msg[0] = 0x4;
-	msg[1] = servo1.read();
-	msg[2] = servo2.read();
-	acc.write(msg, 3);
-	break;
+    case 0:
+      msg[0] = 0x4;
+      msg[1] = servo1.read();
+      msg[2] = servo2.read();
+      acc.write(msg, 3);
+      break;
     }
   } 
   else {
@@ -66,4 +67,6 @@ void loop() {
   }
   delay(10);
 }
+
+
 
